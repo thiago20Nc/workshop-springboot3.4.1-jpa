@@ -3,6 +3,7 @@ package com.thiagoNc20.course.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thiagoNc20.course.entities.pk.OrderItemPK;
 
 import jakarta.persistence.EmbeddedId;
@@ -16,7 +17,7 @@ public class OrderItem implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private OrderItemPK id;  
+	private OrderItemPK id = new OrderItemPK();  
 	
 	private Integer quantity; 
 	private Double price;
@@ -27,10 +28,27 @@ public class OrderItem implements Serializable{
 
 	public OrderItem(Order order, Product product, Integer quantity, Double price) {
 		super();
-		id.setOrder(order);
 		id.setProduct(product);
+		id.setOrder(order);
 		this.quantity = quantity;
 		this.price = price;
+	}
+	
+	@JsonIgnore
+	public Order getOrder() {
+		return id.getOrder();
+	}
+	
+	public void setOrder(Order order) {
+		id.setOrder(order);
+	}
+	
+	public Product getProduct() {
+		return id.getProduct();
+	}
+	
+	public void setProduct(Product product) {
+		id.setProduct(product);
 	}
 
 	public Integer getQuantity() {
@@ -48,22 +66,6 @@ public class OrderItem implements Serializable{
 	public void setPrice(Double price) {
 		this.price = price;
 	} 
-	
-	public Order getOrder() {
-		return id.getOrder();
-	}
-	
-	public void setOrder(Order order) {
-		id.setOrder(order);
-	}
-	
-	public Product getProduct() {
-		return id.getProduct();
-	}
-	
-	public void setProduct(Product product) {
-		id.setProduct(product);
-	}
 
 	@Override
 	public int hashCode() {
@@ -81,6 +83,4 @@ public class OrderItem implements Serializable{
 		OrderItem other = (OrderItem) obj;
 		return Objects.equals(id, other.id);
 	} 
-	
-	
 }
